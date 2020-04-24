@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
             public float narspeed = 30f;
             public float interactRadius=5f;
 
+    //testing
+        // bool testvar = false;
+
 
     void Start()
     {
@@ -42,9 +45,7 @@ public class PlayerController : MonoBehaviour
         //getting stats of player
             GameObject player = GameObject.Find("Player");
             CharacterStats playerStat = (CharacterStats) player.GetComponent(typeof(CharacterStats));
-            playerStat.hunger -= (float)0.0025;
-            playerStat.hunger = Mathf.Clamp(playerStat.hunger,0,100);
-            playerStat.hungerBar.SetValue(playerStat.hunger);
+            
             
             if(!Input.GetKey("left shift"))
             {
@@ -54,8 +55,8 @@ public class PlayerController : MonoBehaviour
             }
             
 
-            if(EventSystem.current.IsPointerOverGameObject())
-                return;
+            // if(EventSystem.current.IsPointerOverGameObject())
+            //     return;
         
         
         
@@ -91,10 +92,45 @@ public class PlayerController : MonoBehaviour
                        }
                     }
                 }
+                if(Input.GetMouseButtonDown(0))
+                {
+                    Ray ray =cam.ScreenPointToRay(Input.mousePosition);                                         
+                    RaycastHit hit;
+
+                    if(Physics.Raycast(ray,out hit,100,movementMask))
+                    {
+                       Interactable interactable = hit.collider.GetComponent<Interactable>();
+                       float distance = Vector3.Distance(hit.collider.transform.position,transform.position);
+                       if(interactable != null && distance<= interactRadius)
+                       {
+                           TriggerDetails(interactable);
+                       }
+                    }
+                }
 
         //movement
                 float translationForward = Input.GetAxis("Vertical") * speed * Time.deltaTime;
                 float translationSideward = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+
+                
+    //testing
+                // if(Input.GetKeyDown("o"))
+                // {
+                //      testvar= true;
+                // }
+                // if(Input.GetKeyDown("p"))
+                // {
+                //      testvar = false;
+                // }
+
+                // if(testvar)
+                // {
+                //     translationForward=0.2f;
+                // }
+                // if(!testvar)
+                // {
+                //     translationForward=0;
+                // }
 
 
         //movementAnimation
@@ -133,6 +169,29 @@ public class PlayerController : MonoBehaviour
                     anim.SetBool("isRunning", false);
                     anim.SetBool("isNaruto", false);
                     
+                }
+
+
+                if(Input.GetKey("a"))
+                {
+                    anim.SetBool("isLeft",true);
+                    anim.SetBool("isRight",false);
+                }
+                else if(Input.GetKey("d"))
+                {
+                    anim.SetBool("isRight",true);
+                    anim.SetBool("isLeft",false);
+                }
+                else
+                {
+                    anim.SetBool("isLeft",false);
+                    anim.SetBool("isRight",false);
+                    
+                }
+
+                if(Input.GetKeyDown("f"))
+                {
+                    anim.Play("rightStrafe");
                 }
 
                 
@@ -188,6 +247,17 @@ public class PlayerController : MonoBehaviour
 
         focus = null;
         
+    }
+    void TriggerDetails(Interactable newFocus)
+    {
+        if(newFocus != focus)
+        {
+            if(focus!=null)
+                focus.OnDefocused();
+
+            focus = newFocus;
+        }
+        newFocus.OnShowDetails();
     }
 
 }

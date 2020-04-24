@@ -5,6 +5,7 @@ public class InventoryUI : MonoBehaviour
 {
     public Transform itemsParent;
     public GameObject inventoryUI;
+    public GameObject ItemDetails;
     Inventory inventory;
 
     InventorySlot[] slots;
@@ -25,6 +26,12 @@ public class InventoryUI : MonoBehaviour
         {
             inventoryUI.SetActive(!inventoryUI.activeSelf);
         }
+        if(Input.GetMouseButtonDown(0))
+        {
+            ItemDetails.SetActive(!ItemDetails.activeSelf);
+        }
+
+        
     }
 
     void UpdateUI()

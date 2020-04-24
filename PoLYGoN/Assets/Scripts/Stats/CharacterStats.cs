@@ -3,10 +3,10 @@
 public class CharacterStats : MonoBehaviour
 {
     public float maxHealth=100;
-    public float currentHealth;
-    public float armor = 0;
-    public float hunger = 75;
-    public float stamina = 100;
+    public static float  currentHealth=100;
+    public static float armor = 0;
+    public static float hunger = 75;
+    public  float stamina = 100;
 
     private float timer=0f;
 
@@ -18,13 +18,12 @@ public class CharacterStats : MonoBehaviour
 
     void Awake()
     {
-        currentHealth = maxHealth;
-        
+          
     }
 
     void Start()
     {
-        currentHealth = maxHealth;
+        
         healthBar.SetMaxValue(maxHealth,currentHealth);
         armorBar.SetMaxValue(100,armor);
         hungerBar.SetMaxValue(100,hunger);
@@ -34,7 +33,12 @@ public class CharacterStats : MonoBehaviour
     void Update() 
     {
         timer-=Time.deltaTime;
+        hunger -= (float)0.0025;
+        hunger = Mathf.Clamp(hunger,0,100);
+        hungerBar.SetValue(hunger);
+    
 
+    //health decrease due to hunger
         if(hunger < 20 && hunger > 10 && timer <= 0)
         {
             currentHealth -= 0.5f;
